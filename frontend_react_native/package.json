@@ -5,6 +5,7 @@
     "expo-camera": "^17.0.10",
     "expo-image-picker": "^17.0.10",
     "expo-media-library": "^18.2.1",
+    "lucide-react-native": "^0.563.0",
     "moti": "^0.30.0",
     "react-native": "^0.83.1",
     "react-native-css-interop": "^0.2.1",
@@ -21,9 +22,9 @@
     "typescript": "~5.9.2"
   },
   "scripts": {
-  "start": "expo start",
-  "android": "expo start --android",
-  "ios": "expo start --ios",
-  "web": "expo start --web"
-}
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  }
 }

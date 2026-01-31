@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { ReactNode} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, TextStyle } from 'react-native';
 import { MotiView } from 'moti';
+import { LayoutGrid, Scan, Beaker, Shield, CloudRain, Trash2, ShoppingBag, Heart, Zap } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 
 interface Props {
@@ -58,10 +59,10 @@ const styles = StyleSheet.create({
 
 export const BottomTabBar: React.FC<Props> = ({ activeTab, onTabChange }) => {
   const tabs = [
-    { id: 'dashboard', label: 'Team', emoji: '👥' },
-    { id: 'store', label: 'Store', emoji: '🛍️' },
-    { id: 'scanner', label: 'Scan', emoji: '📱' },
-    { id: 'lab', label: 'Lab', emoji: '🧪' },
+    { id: 'dashboard', label: 'Team', icon: <LayoutGrid color={activeTab === 'dashboard' ? colors.blue500 : colors.slate500} /> },
+    { id: 'store', label: 'Store', icon: <ShoppingBag color={activeTab === 'store' ? colors.blue500 : colors.slate500} /> },
+    { id: 'scanner', label: 'Scan', icon: <Scan color={activeTab === 'scanner' ? colors.blue500 : colors.slate500} /> },
+    { id: 'lab', label: 'Lab', icon: <Beaker color={activeTab === 'lab' ? colors.blue500 : colors.slate500} /> },
   ];
 
   return (
@@ -71,7 +72,7 @@ export const BottomTabBar: React.FC<Props> = ({ activeTab, onTabChange }) => {
           key={tab.id}
           active={activeTab === tab.id}
           label={tab.label}
-          emoji={tab.emoji}
+          icon={tab.icon}
           onPress={() => onTabChange(tab.id)}
         />
       ))}
@@ -82,17 +83,17 @@ export const BottomTabBar: React.FC<Props> = ({ activeTab, onTabChange }) => {
 interface TabButtonProps {
   active: boolean;
   label: string;
-  emoji: string;
+  icon: ReactNode;
   onPress: () => void;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({ active, label, emoji, onPress }) => (
+const TabButton: React.FC<TabButtonProps> = ({ active, label, icon, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.tabButton}>
     <MotiView
       animate={active ? { scale: 1.1 } : { scale: 1 }}
       style={[styles.tabIcon, active && styles.tabIconActive]}
     >
-      <Text style={[styles.tabEmoji, !active && styles.tabEmojiInactive]}>{emoji}</Text>
+      {icon}
     </MotiView>
     <Text style={[styles.tabLabel, active ? styles.tabLabelActive : styles.tabLabelInactive]}>
       {label}
