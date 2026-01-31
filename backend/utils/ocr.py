@@ -1,3 +1,5 @@
+# utils/ocr.py
+
 import easyocr
 
 reader = easyocr.Reader(['en'], gpu=False)

@@ -3,3 +3,5 @@ easyocr
 opencv-python
 numpy
 rapidfuzz
+python-dotenv
+cohere

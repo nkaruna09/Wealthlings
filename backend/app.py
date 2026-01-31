@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
 from utils.ocr import extract_text
 from utils.matcher import match_brand
-from utils.logo_detector import detect_logo  # new
-
+from utils.logo_detector import detect_logo  # Cohere-powered now
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -13,10 +15,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Load brands
 with open("brands.txt") as f:
     BRANDS = [line.strip() for line in f.readlines()]
-
-@app.route("/")
-def home():
-    return "Brand Scanner API is running."
 
 @app.route("/scan", methods=["POST"])
 def scan_brand():
@@ -31,22 +29,15 @@ def scan_brand():
     image_path = os.path.join(UPLOAD_FOLDER, filename)
     image.save(image_path)
 
-    # 1️⃣ Extract text with OCR
+    # :one: Extract text with OCR
     detected_texts = extract_text(image_path)
     text_result = match_brand(detected_texts, BRANDS)
 
-    # 2️⃣ Detect logo / symbols
-    logo_result = detect_logo(image_path, "data/logos")  # returns {brand, confidence}
-
-    # Combine results
-    final_result = {
-        "text_based": text_result,
-        "logo_based": logo_result
-    }
+    # :two: Detect logo with Cohere Vision
+    logo_result = detect_logo(image_path)  # returns "Brand" or "NO_LOGO"
 
     return jsonify({
-        "detected_text": detected_texts,
-        "result": final_result
+        "logo_based": logo_result
     })
 
 if __name__ == "__main__":
