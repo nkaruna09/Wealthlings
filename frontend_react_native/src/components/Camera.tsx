@@ -9,6 +9,42 @@ import { Link } from 'expo-router';
 import { DarkTheme } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
+import * as ImageManipulator from 'expo-image-manipulator';
+
+// Compress the photo
+const compressPhoto = async (uri: string) => {
+  const result = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: 800 } }], // resize to 800px wide
+    { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+  );
+  return result.uri;
+};
+
+// Upload the photo to backend
+const uploadPhoto = async (uri: string) => {
+  const compressedUri = await compressPhoto(uri);
+
+  const formData = new FormData();
+  formData.append('file', {
+    uri: compressedUri,
+    name: 'photo.jpg',
+    type: 'image/jpeg',
+  } as any);
+
+  try {
+    const response = await fetch('https://your-backend.com/upload', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    const data = await response.json();
+    console.log('Server response:', data);
+  } catch (error) {
+    console.error('Upload failed:', error);
+  }
+};
 
 export function Camera() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -39,22 +75,22 @@ export function Camera() {
     );
   }
 
-  const takePictureAndSave = async () => {
+  const takePictureAndUpload = async () => {
     if (cameraRef.current) {
       try {
-        // 1. Take the picture
         const photo = await cameraRef.current.takePictureAsync();
-        console.log('Photo URI (temporary):', photo.uri);
+        console.log('Photo URI:', photo.uri);
 
-        // 2. Save the image to the media library
-        await MediaLibrary.saveToLibraryAsync(photo.uri);
-        alert('Image successfully saved to Library!');
-        console.log('Image saved to library!');
+        // compress + send to backend
+        await uploadPhoto(photo.uri);
+
+        alert('Photo uploaded successfully!');
       } catch (error) {
-        console.error('Failed to save image:', error);
+        console.error('Failed to upload photo:', error);
       }
     }
   };
+
 
   return (
     <View style={styles.container}>
@@ -62,7 +98,7 @@ export function Camera() {
         <View style={styles.buttonContainer}>
           <Pressable 
             style={styles.fab} 
-            onPress={() => {takePictureAndSave()}}
+            onPress={() => {takePictureAndUpload()}}
           >
           </Pressable>
         </View>
