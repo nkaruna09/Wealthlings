@@ -8,6 +8,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { MotiView } from 'moti';
+import { Camera } from './Camera';
 import { colors } from '@/constants/colors';
 
 interface Props {
@@ -236,9 +237,7 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
               <View style={styles.innerCircle} />
 
               {/* Scanner Icon */}
-              <MotiView style={styles.iconView}>
-                <Text style={styles.iconText}>📱</Text>
-              </MotiView>
+              <Camera />
 
               {/* Instructions */}
               <Text style={styles.instructionTitle}>Point at a Product</Text>
