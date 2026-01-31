@@ -22,6 +22,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#020617"
       },
+      "permissions": [
+        "AUDIO",
+        "MEDIA",
+        "CAMERA"
+      ],
       "package": "com.wealthlings.app"
     },
     "web": {
