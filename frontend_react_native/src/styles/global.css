@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-slate-900/40 backdrop-blur-md border border-slate-700/30;
+  }
+
+  .badge-primary {
+    @apply bg-blue-500/20 text-blue-300 border border-blue-500/30;
+  }
+
+  .badge-success {
+    @apply bg-emerald-500/20 text-emerald-300 border border-emerald-500/30;
+  }
+
+  .badge-danger {
+    @apply bg-rose-500/20 text-rose-300 border border-rose-500/30;
+  }
+
+  .health-bar-low {
+    @apply bg-rose-500;
+  }
+
+  .health-bar-high {
+    @apply bg-emerald-500;
+  }
+}

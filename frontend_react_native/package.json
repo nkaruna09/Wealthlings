@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "babel": "^5.8.38",
+    "expo": "^54.0.32",
+    "expo-image-picker": "^17.0.10",
+    "moti": "^0.30.0",
+    "react-native": "^0.83.1",
+    "react-native-css-interop": "^0.2.1",
+    "react-native-web": "^0.21.2",
+    "zustand": "^5.0.10"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10",
+    "typescript": "~5.9.2"
+  }
+}
