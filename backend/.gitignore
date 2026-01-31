@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+*.whl
+*.manifest
+*.spec
+
+# Virtual environment
+venv/
+env/
+ENV/
+*.env
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Flask / uploads
+uploads/
+instance/
+
+# Logs
+*.log
+
+# Machine Learning / model files
+*.h5
+*.pt
+*.pth
+*.ckpt
+*.tflite
+
+# Secrets / API keys
+*.env
+*.json      # only if contains sensitive keys
