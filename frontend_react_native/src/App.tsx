@@ -24,17 +24,16 @@ export default function App() {
   };
 
   const renderScreen = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return <DashboardScreen onNavigate={handleNavigate} />;
-      case 'store':
-        return <StoreScreen onNavigate={handleNavigate} />;
-      case 'scanner':
-        return <ScannerScreen onNavigate={handleNavigate} />;
-      case 'lab':
-        return <LabScreen onNavigate={handleNavigate} />;
-      default:
-        return <DashboardScreen onNavigate={handleNavigate} />;
+    if (activeTab === 'dashboard') {
+      return <DashboardScreen onNavigate={handleNavigate} />;
+    } else if (activeTab === 'store') {
+      return <StoreScreen onNavigate={handleNavigate} />;
+    } else if (activeTab === 'scanner') {
+      return <ScannerScreen onNavigate={handleNavigate} />;
+    } else if (activeTab === 'lab') {
+      return <LabScreen onNavigate={handleNavigate} />;
+    } else {
+      return <DashboardScreen onNavigate={handleNavigate} />;
     }
   };
 
