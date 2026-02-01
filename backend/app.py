@@ -108,10 +108,10 @@ def scan_brand():
 
     return jsonify({
         'success': True,
-        'is_new': is_new,
+        'is_new': bool(is_new),
         'creature': creature,
         'market_storm': {
-            'active': is_storm,
+            'active': bool(is_storm),
             'severity': storm_severity,
             'affected_sector': stock_data['sector']
         },
@@ -258,4 +258,4 @@ atexit.register(lambda: scheduler.shutdown())
 
 # -------------------- Run Flask -------------------- #
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
