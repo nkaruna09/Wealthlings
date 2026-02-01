@@ -1,7 +1,7 @@
 import React, { ReactNode} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, TextStyle } from 'react-native';
 import { MotiView } from 'moti';
-import { LayoutGrid, Scan, Beaker, Shield, CloudRain, Trash2, ShoppingBag, Heart, Zap } from 'lucide-react-native';
+import { LayoutGrid, Scan, Beaker, Shield, CloudRain, Trash2, ShoppingBag, Heart, Zap, Book } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 
 interface Props {
@@ -62,7 +62,7 @@ export const BottomTabBar: React.FC<Props> = ({ activeTab, onTabChange }) => {
     { id: 'dashboard', label: 'Team', icon: <LayoutGrid color={activeTab === 'dashboard' ? colors.blue500 : colors.slate500} /> },
     { id: 'store', label: 'Store', icon: <ShoppingBag color={activeTab === 'store' ? colors.blue500 : colors.slate500} /> },
     { id: 'scanner', label: 'Scan', icon: <Scan color={activeTab === 'scanner' ? colors.blue500 : colors.slate500} /> },
-    { id: 'lab', label: 'Lab', icon: <Beaker color={activeTab === 'lab' ? colors.blue500 : colors.slate500} /> },
+    { id: 'guide', label: 'Guide', icon: <Book color={activeTab === 'guide' ? colors.blue500 : colors.slate500} /> },
   ];
 
   return (

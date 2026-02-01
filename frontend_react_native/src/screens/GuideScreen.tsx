@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const LabScreen: React.FC<Props> = ({ onNavigate }) => {
+export const GuideScreen: React.FC<Props> = ({ onNavigate }) => {
   const { stocklings } = useGameStore();
 
   const archetypeStats = Object.entries(ARCHETYPE_METADATA).map(([name, metadata]) => ({
@@ -154,7 +154,7 @@ export const LabScreen: React.FC<Props> = ({ onNavigate }) => {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Market Lab</Text>
+          <Text style={styles.title}>Guidebook</Text>
           <Text style={styles.subtitle}>Explore archetype data</Text>
         </View>
 

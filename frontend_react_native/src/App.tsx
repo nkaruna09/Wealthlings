@@ -3,11 +3,11 @@ import { View, StyleSheet } from 'react-native';
 import { DashboardScreen } from '@/screens/DashboardScreen';
 import { StoreScreen } from '@/screens/StoreScreen';
 import { ScannerScreen } from '@/screens/ScannerScreen';
-import { LabScreen } from '@/screens/LabScreen';
+import { GuideScreen } from '@/screens/GuideScreen';
 import { BottomTabBar } from '@/components/BottomTabBar';
 import { colors } from '@/constants/colors';
 
-type TabType = 'dashboard' | 'store' | 'scanner' | 'lab';
+type TabType = 'dashboard' | 'store' | 'scanner' | 'guide';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,8 +30,8 @@ export default function App() {
       return <StoreScreen onNavigate={handleNavigate} />;
     } else if (activeTab === 'scanner') {
       return <ScannerScreen onNavigate={handleNavigate} />;
-    } else if (activeTab === 'lab') {
-      return <LabScreen onNavigate={handleNavigate} />;
+    } else if (activeTab === 'guide') {
+      return <GuideScreen onNavigate={handleNavigate} />;
     } else {
       return <DashboardScreen onNavigate={handleNavigate} />;
     }
