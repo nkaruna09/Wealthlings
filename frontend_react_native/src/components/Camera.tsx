@@ -26,23 +26,34 @@ const uploadPhoto = async (uri: string) => {
   const compressedUri = await compressPhoto(uri);
 
   const formData = new FormData();
-  formData.append('file', {
+  formData.append('image', {
     uri: compressedUri,
     name: 'photo.jpg',
     type: 'image/jpeg',
   } as any);
 
+  formData.append('user_id', 'user_1');
+
+  const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+
   try {
-    const response = await fetch('https://your-backend.com/upload', {
+    const response = await fetch(`${API_BASE_URL}/api/scan`, {
       method: 'POST',
       body: formData,
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Accept': 'application/json' },
     });
 
     const data = await response.json();
-    console.log('Server response:', data);
+
+    if (response.ok) {
+      console.log('Creature Captured:', data.creature);
+      return data;
+    } else {
+      alert(data.error || 'Scan failed');
+    }
   } catch (error) {
-    console.error('Upload failed:', error);
+    console.error('Connection Error:', error);
+    alert('Cannot reach server. Check your IP and network.')
   }
 };
 
