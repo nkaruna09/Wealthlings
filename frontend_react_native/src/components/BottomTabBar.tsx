@@ -61,7 +61,7 @@ export const BottomTabBar: React.FC<Props> = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'dashboard', label: 'Team', icon: <LayoutGrid color={activeTab === 'dashboard' ? colors.blue500 : colors.slate500} /> },
     { id: 'guide', label: 'Guide', icon: <Book color={activeTab === 'guide' ? colors.blue500 : colors.slate500} /> },
-    { id: 'store', label: 'Store', icon: <ShoppingBag color={activeTab === 'store' ? colors.blue500 : colors.slate500} /> },
+    { id: 'store', label: 'Quiz', icon: <ShoppingBag color={activeTab === 'store' ? colors.blue500 : colors.slate500} /> },
     { id: 'scanner', label: 'Scan', icon: <Scan color={activeTab === 'scanner' ? colors.blue500 : colors.slate500} /> },
   ];
 

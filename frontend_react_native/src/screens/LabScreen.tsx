@@ -4,64 +4,10 @@ import { MotiView } from 'moti';
 import { useGameStore } from '@/store/gameStore';
 import { ARCHETYPE_METADATA } from '@/types/stocklings';
 import { colors } from '@/constants/colors';
-import {
-  PiggyBank,
-  ChartBar,
-  Shield,
-  Network,
-  Wallet,
-  Heart
-} from 'lucide-react-native';
-import { renderCreatureBody } from '@/components/CreatureVisual';
 
 interface Props {
   onNavigate?: (tab: string) => void;
 }
-
-const FINANCIAL_TIPS = [
-  {
-    icon: PiggyBank,
-    title: 'Save Your Coins',
-    description: 'Build wealth! Don\'t spend everything at once.',
-    color: '#FBBF24',
-    bgColor: '#78350F',
-  },
-  {
-    icon: ChartBar,
-    title: 'Invest & Grow',
-    description: 'Use coins to discover Stocklings and level up!',
-    color: '#60A5FA',
-    bgColor: '#1E3A8A',
-  },
-  {
-    icon: Shield,
-    title: 'Watch Your Risk',
-    description: 'High rewards = high risk. Know before you buy!',
-    color: '#F87171',
-    bgColor: '#7F1D1D',
-  },
-  {
-    icon: Network,
-    title: 'Mix It Up',
-    description: 'Spread across archetypes to unlock shields!',
-    color: '#F472B6',
-    bgColor: '#831843',
-  },
-  {
-    icon: Wallet,
-    title: 'Budget Smartly',
-    description: 'Plan spending, track performance, adjust strategy.',
-    color: '#34D399',
-    bgColor: '#064E3B',
-  },
-  {
-    icon: Heart,
-    title: 'Defend Your Team',
-    description: 'Heal with potions. Prevention > Loss!',
-    color: '#EC4899',
-    bgColor: '#9F1239',
-  },
-];
 
 const styles = StyleSheet.create({
   container: {
@@ -78,13 +24,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '900',
-    color: colors.white,
-    letterSpacing: -0.5,
-    marginBottom: 8,
-  } as TextStyle,
-  smallerTitle: {
-    fontSize: 20,
     fontWeight: '900',
     color: colors.white,
     letterSpacing: -0.5,
@@ -154,61 +93,47 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.slate300,
   } as TextStyle,
-  tipsSection: {
+  compositionSection: {
     paddingHorizontal: 24,
+    marginTop: 24,
     marginBottom: 24,
   },
-  tipsTitle: {
+  compositionTitle: {
     fontSize: 18,
     fontWeight: '900',
     color: colors.white,
     marginBottom: 16,
     letterSpacing: -0.5,
   } as TextStyle,
-  tipCard: {
+  compositionCard: {
     paddingHorizontal: 24,
-    paddingVertical: 20,
-    borderWidth: 2,
+    paddingVertical: 24,
+    backgroundColor: colors.slate800 + '66',
+    borderWidth: 1,
+    borderColor: colors.slate700,
     borderRadius: 16,
-    marginBottom: 12,
+  },
+  compositionRow: {
     flexDirection: 'row',
-    gap: 16,
-    alignItems: 'flex-start',
-  },
-  tipIconContainer: {
-    width: 70,
-    height: 70,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 5,
+    marginBottom: 8,
   },
-  tipIcon: {
-    fontSize: 40,
-    width: 50,
-    textAlignVertical: 'top',
-  },
-  tipContent: {
-    flex: 1,
-  },
-  tipTitleText: {
-    fontSize: 16,
+  compositionLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.slate400,
+  } as TextStyle,
+  compositionValue: {
+    fontSize: 24,
     fontWeight: '900',
     color: colors.white,
-    marginBottom: 6,
   } as TextStyle,
-  tipDescription: {
-    fontSize: 13,
-    fontWeight: '600',
-    lineHeight: 20,
+  compositionValueSuccess: {
+    color: colors.emerald400,
   } as TextStyle,
   spacer: {
     height: 80,
-  },
-  creatureBodyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    paddingBottom: 24,
   },
 });
 
@@ -221,42 +146,13 @@ export const GuideScreen: React.FC<Props> = ({ onNavigate }) => {
     count: stocklings.filter((s) => s.archetype === name).length,
   }));
 
+  const totalStocklings = stocklings.length;
+  const uniqueArchetypes = new Set(stocklings.map((s) => s.archetype)).size;
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Header */}
-        {/* <View style={styles.header}>
-          <Text style={styles.title}>Financial Tips</Text>
-        </View> */}
-
-        {/* Financial Tips Section */}
-        {/* <View style={styles.tipsSection}>
-          {FINANCIAL_TIPS.map((tip, index) => (
-            <MotiView
-              key={tip.title}
-              from={{ opacity: 0, translateX: -20 }}
-              animate={{ opacity: 1, translateX: 0 }}
-              transition={{ delay: index * 80 }}
-              style={[
-                styles.tipCard,
-                {
-                  backgroundColor: tip.bgColor,
-                  borderColor: tip.color,
-                },
-              ]}
-            >
-              <View style={styles.tipIconContainer}>
-                <tip.icon color={tip.color} style={{ width: 100, height: 100 }} />
-              </View>
-              <View style={styles.tipContent}>
-                <Text style={[styles.tipTitleText, { color: tip.color }]}>{tip.title}</Text>
-                <Text style={[styles.tipDescription, { color: tip.color }]}>{tip.description}</Text>
-              </View>
-            </MotiView>
-          ))}
-        </View> */}
-
-
         <View style={styles.header}>
           <Text style={styles.title}>Guidebook</Text>
           <Text style={styles.subtitle}>Explore archetype data</Text>
@@ -272,16 +168,6 @@ export const GuideScreen: React.FC<Props> = ({ onNavigate }) => {
               transition={{ delay: index * 100 }}
               style={styles.archetypeCard}
             >
-              <View style={styles.creatureBodyContainer}>
-                <MotiView
-                  from={{ translateY: 0 }}
-                  animate={{ translateY: -8 }}
-                  transition={{ type: 'timing', duration: 1500, loop: true, repeatReverse: true }}
-                  style={[styles.creatureBodyContainer, { paddingTop: 32 }]}
-                >
-                  {renderCreatureBody(archetype.name)}
-                </MotiView>
-              </View>
               <View style={styles.archetypeHeader}>
                 <Text style={styles.archetypeName}>{archetype.name}</Text>
                 <View style={styles.countBadge}>
@@ -300,6 +186,23 @@ export const GuideScreen: React.FC<Props> = ({ onNavigate }) => {
               </View>
             </MotiView>
           ))}
+        </View>
+
+        {/* Team Composition */}
+        <View style={styles.compositionSection}>
+          <Text style={styles.compositionTitle}>Team Composition</Text>
+          <View style={styles.compositionCard}>
+            <View style={styles.compositionRow}>
+              <Text style={styles.compositionLabel}>Total Stocklings:</Text>
+              <Text style={styles.compositionValue}>{totalStocklings}</Text>
+            </View>
+            <View style={styles.compositionRow}>
+              <Text style={styles.compositionLabel}>Unique Archetypes:</Text>
+              <Text style={[styles.compositionValue, styles.compositionValueSuccess]}>
+                {uniqueArchetypes}/5
+              </Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.spacer} />

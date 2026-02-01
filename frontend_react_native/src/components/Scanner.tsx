@@ -248,7 +248,7 @@ const uploadPhoto = async (uri: string) => {
 
     if (response.ok) {
       console.log('Creature Captured:', data.creature.personality);
-      alert('Creature captured successfully!');
+      alert('Creature captured successfully! It cost 1000 coins.');
       return data;
     } else {
       alert(data.error || 'Scan failed');

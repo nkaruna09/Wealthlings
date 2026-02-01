@@ -119,6 +119,7 @@ export const StocklingCard: React.FC<Props> = ({
 const styles = StyleSheet.create({
   card: {
     width: 260,
+    height: 360,
     padding: 16,
     borderRadius: 28,
     marginRight: 16,
