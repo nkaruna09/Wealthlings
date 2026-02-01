@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Scanner } from '@/components/Scanner';
+import { Archetype } from '@/types/stocklings';
 
 interface Props {
   onNavigate: (tab: string) => void;
@@ -9,17 +10,17 @@ interface Props {
 export const ScannerScreen: React.FC<Props> = ({ onNavigate }) => {
   const { addStockling } = useGameStore();
 
-  const handleScanComplete = (brand: string) => {
+  const handleScanComplete = (id: string, name: string, brand: string, sector: string, level: number, archetype: Archetype, isAffectedByStorm: boolean) => {
     const newStockling = {
-      id: Math.random().toString(),
-      name: 'Flash',
+      id: id,
+      name: name,
       brand: brand,
-      sector: 'Market DNA',
-      archetype: 'Sprinter' as const,
-      level: 1,
+      sector: sector,
+      archetype: archetype,
+      level: level,
       health: 100,
       mood: 'happy' as const,
-      isAffectedByStorm: false,
+      isAffectedByStorm: isAffectedByStorm,
       color: '#FFD700',
       icon: '✨',
     };

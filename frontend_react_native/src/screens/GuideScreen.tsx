@@ -146,7 +146,7 @@ export const GuideScreen: React.FC<Props> = ({ onNavigate }) => {
     count: stocklings.filter((s) => s.archetype === name).length,
   }));
 
-  const totalStocklings = stocklings.length;
+  const totalWeathlings = stocklings.length;
   const uniqueArchetypes = new Set(stocklings.map((s) => s.archetype)).size;
 
   return (
@@ -193,8 +193,8 @@ export const GuideScreen: React.FC<Props> = ({ onNavigate }) => {
           <Text style={styles.compositionTitle}>Team Composition</Text>
           <View style={styles.compositionCard}>
             <View style={styles.compositionRow}>
-              <Text style={styles.compositionLabel}>Total Stocklings:</Text>
-              <Text style={styles.compositionValue}>{totalStocklings}</Text>
+              <Text style={styles.compositionLabel}>Total Weathlings:</Text>
+              <Text style={styles.compositionValue}>{totalWeathlings}</Text>
             </View>
             <View style={styles.compositionRow}>
               <Text style={styles.compositionLabel}>Unique Archetypes:</Text>

@@ -14,9 +14,9 @@ SECTOR_PERSONALITY_MAP = {
     'Consumer Defensive': 'Steady Guardian',
     'Utilities': 'Steady Guardian',
     'Healthcare': 'Steady Guardian',
-    'Technology': 'Trend Chaser',
+    'Technology': 'Sprinter',
     'Communication Services': 'Trend Chaser',
-    'Consumer Cyclical': 'Trend Chaser',
+    'Consumer Cyclical': 'Sprinter',
     'Financial Services': 'Giant',
     'Energy': 'Giant',
     'Basic Materials': 'Giant',
@@ -26,26 +26,91 @@ SECTOR_PERSONALITY_MAP = {
 
 # Brand to ticker mapping
 BRAND_TICKER_MAP = {
-    'McDonald\'s': 'MCD',
+    # Tech
     'Apple': 'AAPL',
     'Microsoft': 'MSFT',
     'Google': 'GOOGL',
+    'Alphabet': 'GOOGL',
     'Amazon': 'AMZN',
     'Meta': 'META',
-    'Tesla': 'TSLA',
-    'Nike': 'NKE',
-    'Coca-Cola': 'KO',
-    'Disney': 'DIS',
+    'Facebook': 'META',
     'Netflix': 'NFLX',
-    'Roblox': 'RBLX',
-    'Walmart': 'WMT',
-    'Target': 'TGT',
-    'Starbucks': 'SBUX',
-    'Spotify': 'SPOT',
+    'Tesla': 'TSLA',
     'Sony': 'SONY',
     'Nintendo': 'NTDOY',
+    'Samsung': 'SSNLF',
+    'Intel': 'INTC',
+    'AMD': 'AMD',
+    'NVIDIA': 'NVDA',
+    'Nvidia': 'NVDA',
+    
+    # Gaming
+    'Roblox': 'RBLX',
+    'Electronic Arts': 'EA',
+    'EA': 'EA',
+    'Activision': 'ATVI',
+    'Unity': 'U',
+    
+    # Streaming & Entertainment
+    'Spotify': 'SPOT',
+    'Disney': 'DIS',
+    'Warner Bros': 'WBD',
+    'Paramount': 'PARA',
+    
+    # Food & Beverage
+    'McDonald\'s': 'MCD',
+    'McDonalds': 'MCD',
+    'Coca-Cola': 'KO',
+    'Coca Cola': 'KO',
     'Pepsi': 'PEP',
-    'Sprite': 'KO'
+    'PepsiCo': 'PEP',
+    'Starbucks': 'SBUX',
+    'Chipotle': 'CMG',
+    'Yum Brands': 'YUM',
+    'Domino\'s': 'DPZ',
+    'Dominos': 'DPZ',
+    'Doritos': 'PEP',
+    'Wendy\'s': 'WEN',
+    'General Mills': 'GIS',
+    'Kellogg': 'K',
+    'Kraft Heinz': 'KHC',
+    'Mondelez': 'MDLZ',
+    'Nestle': 'NSRGY',
+    
+    # Retail
+    'Walmart': 'WMT',
+    'Target': 'TGT',
+    'Costco': 'COST',
+    'Home Depot': 'HD',
+    'Lowe\'s': 'LOW',
+    'Best Buy': 'BBY',
+    
+    # Apparel & Fashion
+    'Nike': 'NKE',
+    'Adidas': 'ADDYY',
+    'Lululemon': 'LULU',
+    'Gap': 'GPS',
+    'Ralph Lauren': 'RL',
+    'Under Armour': 'UAA',
+    
+    # Automotive
+    'Ford': 'F',
+    'General Motors': 'GM',
+    'GM': 'GM',
+    'Toyota': 'TM',
+    'Honda': 'HMC',
+    
+    # Other
+    'LEGO': 'LEGO.CO',  # May need special handling
+    'Mattel': 'MAT',
+    'Hasbro': 'HAS',
+    'Johnson & Johnson': 'JNJ',
+    'Procter & Gamble': 'PG',
+    'P&G': 'PG',
+    'Visa': 'V',
+    'Mastercard': 'MA',
+    'PayPal': 'PYPL',
+    'Square': 'SQ'
 }
 
 
@@ -133,7 +198,7 @@ def check_market_storm(sector):
         today_close = hist['Close'].iloc[-1]
         yesterday_close = hist['Close'].iloc[-2]
         change = ((today_close - yesterday_close) / yesterday_close) * 100
-        is_storm = change < -3
+        is_storm = change < -1
         return is_storm, round(abs(change) if is_storm else 0, 2)
     except:
         return False, 0

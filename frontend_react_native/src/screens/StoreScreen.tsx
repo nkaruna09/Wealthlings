@@ -23,7 +23,7 @@ const STORE_ITEMS: StoreItem[] = [
   {
     id: '1',
     name: 'Healing Potion',
-    description: 'Restore confidence to your Stocklings',
+    description: 'Restore confidence to your Weathlings',
     price: 100,
     icon: <Heart color={colors.rose300}/>,
     type: 'healing',
@@ -239,7 +239,7 @@ export const StoreScreen: React.FC<Props> = ({ onNavigate }) => {
           <Text style={styles.title}>Market Store</Text>
           <View style={styles.coinsDisplay}>
             <Text>🪙</Text>
-            <Text style={styles.coinsText}>{coins.toLocaleString()}</Text>
+            <Text style={styles.coinsText}>{coins.toString()}</Text>
           </View>
         </View>
 
