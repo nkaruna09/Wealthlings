@@ -1,8 +1,10 @@
+// frontend_react_native/src/screens/DashboardScreen.tsx
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, FlatList, StyleSheet, TextStyle } from 'react-native';
 import { MotiView } from 'moti';
 import { useGameStore } from '@/store/gameStore';
 import { StocklingCard } from '@/components/StocklingCard';
+import { CreatureVisual } from '@/components/CreatureVisual';
 import { colors } from '@/constants/colors';
 
 interface Props {
@@ -337,6 +339,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
         <View style={styles.teamSection}>
           <View style={styles.teamHeader}>
             <Text style={styles.teamTitle}>My Team</Text>
+            {/* Potion Badge */}
             <View style={styles.potionBadge}>
               <Text>💖</Text>
               <Text style={styles.potionBadgeText}>{inventory.potions} Potions</Text>
@@ -363,6 +366,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
                   hasShield={hasDiversificationShield}
                   inventoryPotions={inventory.potions}
                   onHeal={handleHeal}
+                  onSell={() => console.log('Sell', item.id)} // make sure to pass onSell
                 />
                 {item.isAffectedByStorm && (
                   <TouchableOpacity
@@ -376,6 +380,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
             )}
           />
         </View>
+
 
         {/* Diversification Shield */}
         <MotiView

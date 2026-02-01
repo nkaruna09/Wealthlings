@@ -7,6 +7,7 @@ import { colors } from '@/constants/colors';
 interface CreatureProps {
   stockling: Stockling;
   size?: 'sm' | 'md' | 'lg';
+  isAffectedByStorm?: boolean;
 }
 
 const createStyles = () =>
@@ -393,27 +394,38 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
   };
 
   return (
-    <View style={[styles.container, { transform: [{ scale }] }]}>
-      <View style={styles.creatureBodyContainer}>
-        {stockling.mood === 'nervous' && (
-          <MotiView
-            from={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={styles.sickLabel}
-          >
-            <Text style={styles.sickLabelText}>Feeling Sick...</Text>
-          </MotiView>
-        )}
-        {renderCreatureBody()}
-      </View>
+    <View
+  style={[
+    styles.container,
+    { transform: [{ scale }] },
+  ]}
+>
+  <View
+    style={[
+      styles.creatureBodyContainer,
+      { paddingTop: 32 }, // increase top padding so creature has more space
+    ]}
+  >
+    {stockling.mood === 'nervous' && (
+      <MotiView
+        from={{ opacity: 0, translateY: -20 }} // start slightly higher for a smoother fade-in
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{ type: 'timing', duration: 500 }}
+        style={styles.sickLabel}
+      >
+        <Text style={styles.sickLabelText}>Feeling Sick...</Text>
+      </MotiView>
+    )}
+    {renderCreatureBody()}
+  </View>
 
       <View style={styles.infoSection}>
         <Text style={styles.name}>{stockling.name}</Text>
         <Text style={styles.archetype}>{stockling.archetype}</Text>
       </View>
 
-      <View style={styles.statsSection}>
-        {/* Health Stat */}
+      {/* <View style={styles.statsSection}>
+        
         <View style={styles.statRow}>
           <View style={[styles.statLabel, { justifyContent: 'space-between' }]}>
             <Text style={styles.statLabelText}>❤️ Health</Text>
@@ -430,7 +442,7 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
           </View>
         </View>
 
-        {/* Mood Stat */}
+        
         <View style={styles.statRow}>
           <View style={[styles.statLabel, { justifyContent: 'space-between' }]}>
             <Text style={styles.statLabelText}>😊 Mood</Text>
@@ -443,7 +455,9 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
             </Text>
           </View>
         </View>
-      </View>
+        
+
+      </View> */}
     </View>
   );
 };
