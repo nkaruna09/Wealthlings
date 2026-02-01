@@ -1,6 +1,6 @@
 // frontend_react_native/src/screens/DashboardScreen.tsx
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, FlatList, StyleSheet, TextStyle } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, FlatList, StyleSheet, TextStyle, Modal, Pressable } from 'react-native';
 import { MotiView } from 'moti';
 import { useGameStore } from '@/store/gameStore';
 import { StocklingCard } from '@/components/StocklingCard';
@@ -74,6 +74,38 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: colors.white,
   } as TextStyle,
+  howToPlayButton: {
+    backgroundColor: colors.rose500,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 12,
+    marginLeft: 12,
+  },
+  howToPlayText: { color: colors.white, fontWeight: '700' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: '#000000aa',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '85%',
+    backgroundColor: colors.slate950,
+    padding: 24,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.slate700,
+  },
+  modalTitle: { fontSize: 20, fontWeight: '900', color: colors.white, marginBottom: 16 },
+  modalText: { fontSize: 14, color: colors.slate400, marginBottom: 12 },
+  closeButton: {
+    backgroundColor: colors.rose500,
+    paddingVertical: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  closeButtonText: { color: colors.white, fontWeight: '700' },
   stormAlert: {
     marginHorizontal: 24,
     marginBottom: 24,
@@ -254,7 +286,8 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
 
   const uniqueArchetypes = new Set(stocklings.map((s) => s.archetype));
   const hasDiversificationShield = uniqueArchetypes.size >= 3;
-
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
+  
   // Simulate storms
   useEffect(() => {
     const stormTimer = setInterval(() => {
@@ -417,8 +450,35 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
           {hasDiversificationShield && <Text style={styles.shieldBadge}>✨</Text>}
         </MotiView>
 
+        {/* How to Play Button (below shield) */}
+        <TouchableOpacity
+          style={[styles.howToPlayButton, { alignSelf: 'center', marginVertical: 24 }]}
+          onPress={() => setShowHowToPlay(true)}
+        >
+          <Text style={styles.howToPlayText}>How to Play</Text>
+        </TouchableOpacity>
+
         <View style={styles.spacer} />
+
+        <View style={styles.spacer} />
+
       </ScrollView>
+
+      {/*How to Play Modal*/}
+      <Modal transparent visible={showHowToPlay} animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>How to Play Stocklings</Text>
+            <Text style={styles.modalText}>1️⃣ Collect Stocklings by exploring the market.</Text>
+            <Text style={styles.modalText}>2️⃣ Use potions to heal your Stocklings.</Text>
+            <Text style={styles.modalText}>3️⃣ Diversify your team to activate the Team Shield.</Text>
+            <Text style={styles.modalText}>4️⃣ Protect your Stocklings from storms and market volatility.</Text>
+            <Pressable style={styles.closeButton} onPress={() => setShowHowToPlay(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
