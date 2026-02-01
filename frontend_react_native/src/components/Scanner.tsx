@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   },
   scannerContainer: {
     flex: 1,
+    top: 40,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -65,17 +66,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scannerCircle: {
-    width: 256,
-    height: 256,
-    borderRadius: 128,
+    width: 320,
+    height: 320,
+    borderRadius: 170,
     borderWidth: 2,
     borderColor: colors.blue500,
   },
   innerCircle: {
     position: 'absolute',
-    width: 224,
-    height: 224,
-    borderRadius: 112,
+    width: 300,
+    height: 300,
+    borderRadius: 160,
     borderWidth: 4,
     borderColor: colors.blue400,
     opacity: 0.6,
@@ -237,7 +238,7 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
               <View style={styles.innerCircle} />
 
               {/* Scanner Icon */}
-              <Camera />
+              <Camera buttonPressed={isScanning} />
 
               {/* Instructions */}
               <Text style={styles.instructionTitle}>Point at a Product</Text>

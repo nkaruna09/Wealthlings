@@ -10,10 +10,33 @@ import { DarkTheme } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 
-export function Camera() {
+export function Camera({buttonPressed}: {buttonPressed: boolean}) {
   const [permission, requestPermission] = useCameraPermissions();
   const [mediaLibraryPermission, requestMediaLibraryPermission] = MediaLibrary.usePermissions();
   const cameraRef = useRef(null);
+
+  const takePictureAndSave = async () => {
+    if (cameraRef.current) {
+      try {
+        // 1. Take the picture
+        const photo = await cameraRef.current.takePictureAsync();
+        console.log('Photo URI (temporary):', photo.uri);
+
+        // 2. Save the image to the media library
+        await MediaLibrary.saveToLibraryAsync(photo.uri);
+        alert('Image successfully saved to Library!');
+        console.log('Image saved to library!');
+      } catch (error) {
+        console.error('Failed to save image:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (buttonPressed) {
+      takePictureAndSave();
+    }
+  }, [buttonPressed]);
 
   if (!permission || !mediaLibraryPermission) {
     // Camera permissions are not granted yet
@@ -39,32 +62,10 @@ export function Camera() {
     );
   }
 
-  const takePictureAndSave = async () => {
-    if (cameraRef.current) {
-      try {
-        // 1. Take the picture
-        const photo = await cameraRef.current.takePictureAsync();
-        console.log('Photo URI (temporary):', photo.uri);
-
-        // 2. Save the image to the media library
-        await MediaLibrary.saveToLibraryAsync(photo.uri);
-        alert('Image successfully saved to Library!');
-        console.log('Image saved to library!');
-      } catch (error) {
-        console.error('Failed to save image:', error);
-      }
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <CameraView style={styles.container} ref={cameraRef}>
+      <CameraView style={styles.camera} ref={cameraRef} zoom={0.1}>
         <View style={styles.buttonContainer}>
-          <Pressable 
-            style={styles.fab} 
-            onPress={() => {takePictureAndSave()}}
-          >
-          </Pressable>
         </View>
       </CameraView>
     </View>
@@ -73,8 +74,16 @@ export function Camera() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    zIndex: -1000,
+    width: 305,
+    height: 305,
     justifyContent: 'center',
+    borderRadius: 400,
+    overflow: 'hidden',
+  },
+  camera: {
+    flex: 1,
   },
   fab: {
     position: 'absolute',
