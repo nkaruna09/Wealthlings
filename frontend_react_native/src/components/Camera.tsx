@@ -37,6 +37,7 @@ const uploadPhoto = async (uri: string) => {
   const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
   try {
+    console.log("SENDING TO URL:", `${process.env.EXPO_PUBLIC_API_URL}/api/scan`);
     const response = await fetch(`${API_BASE_URL}/api/scan`, {
       method: 'POST',
       body: formData,
