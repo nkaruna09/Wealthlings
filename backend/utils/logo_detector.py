@@ -51,7 +51,7 @@ def detect_logo(image_path: str) -> str:
         result = response.message.content[0].text.strip()
         if result != "NO_LOGO" and not VALID_OUTPUT.match(result):
             return "NO_LOGO"
-        return result
+        return {"logo": result if result != "NO_LOGO" else None}
 
     except Exception as e:
         print(f"[Logo Detection Error] {e}")

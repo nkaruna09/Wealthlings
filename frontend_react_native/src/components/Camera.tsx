@@ -9,32 +9,79 @@ import { Link } from 'expo-router';
 import { DarkTheme } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
+import * as ImageManipulator from 'expo-image-manipulator';
+
+// Compress the photo
+const compressPhoto = async (uri: string) => {
+  const result = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: 800 } }], // resize to 800px wide
+    { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+  );
+  return result.uri;
+};
+
+// Upload the photo to backend
+const uploadPhoto = async (uri: string) => {
+  const compressedUri = await compressPhoto(uri);
+
+  const formData = new FormData();
+  formData.append('image', {
+    uri: compressedUri,
+    name: 'photo.jpg',
+    type: 'image/jpeg',
+  } as any);
+
+  formData.append('user_id', 'user_1');
+
+  const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/scan`, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Creature Captured:', data.creature);
+      return data;
+    } else {
+      alert(data.error || 'Scan failed');
+    }
+  } catch (error) {
+    console.error('Connection Error:', error);
+    alert('Cannot reach server. Check your IP and network.')
+  }
+};
 
 export function Camera({buttonPressed}: {buttonPressed: boolean}) {
   const [permission, requestPermission] = useCameraPermissions();
   const [mediaLibraryPermission, requestMediaLibraryPermission] = MediaLibrary.usePermissions();
   const cameraRef = useRef(null);
 
-  const takePictureAndSave = async () => {
+    const takePictureAndUpload = async () => {
     if (cameraRef.current) {
       try {
-        // 1. Take the picture
         const photo = await cameraRef.current.takePictureAsync();
-        console.log('Photo URI (temporary):', photo.uri);
+        console.log('Photo URI:', photo.uri);
 
-        // 2. Save the image to the media library
-        await MediaLibrary.saveToLibraryAsync(photo.uri);
-        alert('Image successfully saved to Library!');
-        console.log('Image saved to library!');
+        // compress + send to backend
+        await uploadPhoto(photo.uri);
+
+        alert('Photo uploaded successfully!');
       } catch (error) {
-        console.error('Failed to save image:', error);
+        console.error('Failed to upload photo:', error);
       }
     }
   };
 
+
   useEffect(() => {
     if (buttonPressed) {
-      takePictureAndSave();
+      takePictureAndUpload();
     }
   }, [buttonPressed]);
 
@@ -61,6 +108,7 @@ export function Camera({buttonPressed}: {buttonPressed: boolean}) {
       </View>
     );
   }
+
 
   return (
     <View style={styles.container}>
