@@ -6,6 +6,7 @@ import { useGameStore } from '@/store/gameStore';
 import { StocklingCard } from '@/components/StocklingCard';
 import { CreatureVisual } from '@/components/CreatureVisual';
 import { colors } from '@/constants/colors';
+import { Image } from 'react-native';
 
 interface Props {
   onNavigate: (tab: string) => void;
@@ -376,7 +377,10 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <View style={styles.headerIcon}>
-              <Text style={styles.headerIconText}>🛡️</Text>
+              <Image
+                source={require('../../assets/wealthlings_logo.png')}
+                style={styles.headerIcon}
+              />
             </View>
             <View>
               <Text style={styles.headerTitle}>Weathlings</Text>
