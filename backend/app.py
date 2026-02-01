@@ -82,7 +82,7 @@ def scan_brand():
         creature = {
             'id': creature_id,
             'ticker': ticker,
-            'name': stock_data['company_name'].split()[0][:15],
+            'name': stock_data['company_name'].split(',')[0][:15],
             'company_name': stock_data['company_name'],
             'sector': stock_data['sector'],
             'personality': personality,

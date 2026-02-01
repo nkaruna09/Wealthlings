@@ -248,7 +248,7 @@ const uploadPhoto = async (uri: string) => {
 
     if (response.ok) {
       console.log('Creature Captured:', data.creature.personality);
-      alert('Photo uploaded successfully!');
+      alert('Creature captured successfully!');
       return data;
     } else {
       alert(data.error || 'Scan failed');
