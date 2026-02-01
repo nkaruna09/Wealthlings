@@ -1,3 +1,4 @@
+// frontend_react_native/src/screens/DashboardScreen.tsx
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, FlatList, StyleSheet, TextStyle } from 'react-native';
 import { MotiView } from 'moti';
@@ -338,33 +339,14 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
         <View style={styles.teamSection}>
           <View style={styles.teamHeader}>
             <Text style={styles.teamTitle}>My Team</Text>
+            {/* Potion Badge */}
             <View style={styles.potionBadge}>
               <Text>💖</Text>
               <Text style={styles.potionBadgeText}>{inventory.potions} Potions</Text>
             </View>
           </View>
 
-          {/* Creatures Section */}
-          <FlatList
-            data={stocklings}
-            horizontal
-            scrollEnabled={stocklings.length > 1}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.flatListContent}
-            renderItem={({ item, index }) => (
-              <MotiView
-                from={{ opacity: 0, translateX: 20 }}
-                animate={{ opacity: 1, translateX: 0 }}
-                transition={{ delay: index * 100 }}
-              >
-                <CreatureVisual stockling={item} size="md" />
-              </MotiView>
-            )}
-          />
-
           {/* Stockling Cards */}
-          <Text style={[styles.teamTitle, { marginTop: 24, marginBottom: 16 }]}>Team Details</Text>
           <FlatList
             data={stocklings}
             horizontal
@@ -384,6 +366,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
                   hasShield={hasDiversificationShield}
                   inventoryPotions={inventory.potions}
                   onHeal={handleHeal}
+                  onSell={() => console.log('Sell', item.id)} // make sure to pass onSell
                 />
                 {item.isAffectedByStorm && (
                   <TouchableOpacity
@@ -397,6 +380,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
             )}
           />
         </View>
+
 
         {/* Diversification Shield */}
         <MotiView
