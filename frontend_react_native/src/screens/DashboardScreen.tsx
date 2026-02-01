@@ -500,11 +500,11 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
       <Modal transparent visible={showHowToPlay} animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>How to Play Stocklings</Text>
-            <Text style={styles.modalText}>1️⃣ Collect Stocklings by exploring the market.</Text>
-            <Text style={styles.modalText}>2️⃣ Use potions to heal your Stocklings.</Text>
+            <Text style={styles.modalTitle}>How to Play Wealthlings</Text>
+            <Text style={styles.modalText}>1️⃣ Collect Wealthlings by exploring the market.</Text>
+            <Text style={styles.modalText}>2️⃣ Use potions to heal your Wealthlings.</Text>
             <Text style={styles.modalText}>3️⃣ Diversify your team to activate the Team Shield.</Text>
-            <Text style={styles.modalText}>4️⃣ Protect your Stocklings from storms and market volatility.</Text>
+            <Text style={styles.modalText}>4️⃣ Protect your Wealthlings from storms and market volatility.</Text>
             <Pressable style={styles.closeButton} onPress={() => setShowHowToPlay(false)}>
               <Text style={styles.closeButtonText}>Close</Text>
             </Pressable>
