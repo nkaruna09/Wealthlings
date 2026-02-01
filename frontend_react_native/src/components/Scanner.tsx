@@ -172,21 +172,66 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
+  errorIconText: {
+    fontSize: 56,
+    bottom: 12,
+  },
+  errorTitle: {
+    color: colors.white,
+    fontSize: 30,
+    fontWeight: '900',
+    marginBottom: 8,
+  },
+  errorMessage: {
+    color: colors.rose400,
+    fontSize: 18,
+    fontWeight: '900',
+    marginBottom: 16,
+  },
+  errorDescription: {
+    color: colors.slate400,
+    textAlign: 'center',
+    fontSize: 14,
+    marginBottom: 32,
+    paddingHorizontal: 20,
+  },
+  retryButton: {
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.blue500,
+  },
+  retryButtonText: {
+    fontWeight: '900',
+    fontSize: 16,
+    color: colors.white,
+  },
 });
 
 export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [detectedBrand, setDetectedBrand] = useState<string | null>(null);
+  const [scanError, setScanError] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const startScan = () => {
     setIsScanning(true);
     setProgress(0);
+    setScanError(false);
     const delay = 1500 + Math.random() * 1500;
 
     setTimeout(() => {
-      const randomBrand = BRAND_MOCKS[Math.floor(Math.random() * BRAND_MOCKS.length)];
-      setDetectedBrand(randomBrand);
+      // 70% chance of success, 30% chance of error
+      const isSuccess = Math.random() > 0.3;
+      
+      if (isSuccess) {
+        const randomBrand = BRAND_MOCKS[Math.floor(Math.random() * BRAND_MOCKS.length)];
+        setDetectedBrand(randomBrand);
+      } else {
+        setScanError(true);
+      }
     }, delay);
   };
 
@@ -209,6 +254,13 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
     }
   }, [detectedBrand, progress, onScanComplete]);
 
+  const handleRetry = () => {
+    setDetectedBrand(null);
+    setScanError(false);
+    setProgress(0);
+    setIsScanning(false);
+  };
+
   const screenWidth = Dimensions.get('window').width;
 
   return (
@@ -225,7 +277,7 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
 
         {/* Scanner View */}
         <View style={styles.scannerContainer}>
-          {!detectedBrand ? (
+          {!detectedBrand && !scanError ? (
             <View style={styles.itemsCenter}>
               {/* Scanner Circle */}
               <MotiView
@@ -263,6 +315,31 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
                 >
                   {isScanning ? 'SCANNING...' : 'START SCAN'}
                 </Text>
+              </TouchableOpacity>
+            </View>
+          ) : scanError ? (
+            <View style={styles.detectedContainer}>
+              {/* Error Detected */}
+              <MotiView
+                from={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+              >
+                <Text style={styles.errorIconText}>😢</Text>
+              </MotiView>
+
+              <Text style={styles.errorTitle}>No Logo Detected</Text>
+              <Text style={styles.errorMessage}>Try Again</Text>
+
+              <Text style={styles.errorDescription}>
+                Make sure the product is well-lit and the logo is clearly visible
+              </Text>
+
+              {/* Retry Button */}
+              <TouchableOpacity
+                onPress={handleRetry}
+                style={styles.retryButton}
+              >
+                <Text style={styles.retryButtonText}>RETRY SCAN</Text>
               </TouchableOpacity>
             </View>
           ) : (
