@@ -19,13 +19,20 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#020617"
       },
       "permissions": [
-        "AUDIO",
-        "MEDIA",
-        "CAMERA"
+        "android.permission.AUDIO",
+        "android.permission.MEDIA",
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_AUDIO",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
       ],
       "package": "com.wealthlings.app"
     },
@@ -39,7 +46,22 @@
           "photosPermission": "The app accesses your photos to scan brands.",
           "cameraPermission": "The app needs camera permission to scan brands."
         }
+      ],
+      [
+        "expo-media-library",
+        {
+          "permissions": [
+            "READ_EXTERNAL_STORAGE",
+            "WRITE_EXTERNAL_STORAGE",
+            "AUDIO"
+          ]
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cc5ff973-c61d-4348-9b38-9e0693bb36c3"
+      }
+    }
   }
 }
