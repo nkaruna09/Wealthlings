@@ -37,6 +37,7 @@ const uploadPhoto = async (uri: string) => {
   const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
   try {
+    console.log("SENDING TO URL:", `${process.env.EXPO_PUBLIC_API_URL}/api/scan`);
     const response = await fetch(`${API_BASE_URL}/api/scan`, {
       method: 'POST',
       body: formData,
@@ -105,15 +106,22 @@ export function Camera() {
 
   return (
     <View style={styles.container}>
-      <CameraView style={styles.container} ref={cameraRef}>
-        <View style={styles.buttonContainer}>
-          <Pressable 
-            style={styles.fab} 
-            onPress={() => {takePictureAndUpload()}}
-          >
-          </Pressable>
-        </View>
-      </CameraView>
+      {/* The CameraView is now a sibling, not a parent */}
+      <CameraView 
+        style={StyleSheet.absoluteFillObject} 
+        ref={cameraRef} 
+      />
+      
+      {/* This View sits ON TOP of the camera */}
+      <View style={styles.buttonContainer} pointerEvents="box-none">
+        <TouchableOpacity 
+          style={styles.fab} 
+          onPress={takePictureAndUpload}
+        >
+          {/* The button visual */}
+          <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 35, borderWeight: 4, borderColor: '#ddd' }} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
