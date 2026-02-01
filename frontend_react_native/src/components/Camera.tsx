@@ -9,56 +9,8 @@ import { Link } from 'expo-router';
 import { DarkTheme } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
-import * as ImageManipulator from 'expo-image-manipulator';
 
-// Compress the photo
-const compressPhoto = async (uri: string) => {
-  const result = await ImageManipulator.manipulateAsync(
-    uri,
-    [{ resize: { width: 800 } }], // resize to 800px wide
-    { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-  );
-  return result.uri;
-};
-
-// Upload the photo to backend
-const uploadPhoto = async (uri: string) => {
-  const compressedUri = await compressPhoto(uri);
-
-  const formData = new FormData();
-  formData.append('image', {
-    uri: compressedUri,
-    name: 'photo.jpg',
-    type: 'image/jpeg',
-  } as any);
-
-  formData.append('user_id', 'user_1');
-
-  const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
-
-  try {
-    console.log("SENDING TO URL:", `${process.env.EXPO_PUBLIC_API_URL}/api/scan`);
-    const response = await fetch(`${API_BASE_URL}/api/scan`, {
-      method: 'POST',
-      body: formData,
-      headers: { 'Accept': 'application/json' },
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      console.log('Creature Captured:', data.creature);
-      return data;
-    } else {
-      alert(data.error || 'Scan failed');
-    }
-  } catch (error) {
-    console.error('Connection Error:', error);
-    alert('Cannot reach server. Check your IP and network.')
-  }
-};
-
-export function Camera({buttonPressed}: {buttonPressed: boolean}) {
+export function Camera({buttonPressed, setPhotoUri}: {buttonPressed: boolean, setPhotoUri: (uri: string | null) => void}) {
   const [permission, requestPermission] = useCameraPermissions();
   const [mediaLibraryPermission, requestMediaLibraryPermission] = MediaLibrary.usePermissions();
   const cameraRef = useRef(null);
@@ -70,9 +22,7 @@ export function Camera({buttonPressed}: {buttonPressed: boolean}) {
         console.log('Photo URI:', photo.uri);
 
         // compress + send to backend
-        await uploadPhoto(photo.uri);
-
-        alert('Photo uploaded successfully!');
+        setPhotoUri(photo.uri);
       } catch (error) {
         console.error('Failed to upload photo:', error);
       }
