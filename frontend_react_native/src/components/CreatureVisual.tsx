@@ -304,15 +304,16 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
   const renderCreatureBody = () => {
     switch (stockling.archetype) {
       case 'Sprinter':
+        // Animate legs back-and-forth
         return (
           <View style={styles.speedRunnerBody}>
             <View style={[styles.speedRunnerEye, styles.speedRunnerLeftEye]} />
             <View style={[styles.speedRunnerEye, styles.speedRunnerRightEye]} />
             <View style={styles.speedRunnerMouth} />
             <MotiView
-              from={{ translateX: -40 }}
-              animate={{ translateX: 40 }}
-              transition={{ type: 'timing', duration: 200, loop: true }}
+              from={{ translateX: -6 }}
+              animate={{ translateX: 6 }}
+              transition={{ type: 'timing', duration: 400, loop: true, repeatReverse: true }}
               style={styles.speedRunnerLegs}
             >
               <View style={styles.speedRunnerLeg} />
@@ -322,38 +323,40 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
         );
 
       case 'Trend Chaser':
+        // Aura pulsates and rotates
         return (
           <View style={styles.caffeineBody}>
             <View style={[styles.caffeineEye, styles.caffeineLeftEye]} />
             <View style={[styles.caffeineEye, styles.caffeineRightEye]} />
             <MotiView
-              from={{ scale: 1 }}
-              animate={{ rotate: '5deg', scale: 1.05 }}
-              transition={{ type: 'timing', duration: 2000, loop: true }}
+              from={{ transform: [{ scale: 1 }, { rotate: '0deg' }] }}
+              animate={{ transform: [{ scale: 1.05 }, { rotate: '10deg' }] }}
+              transition={{ type: 'timing', duration: 1500, loop: true, repeatReverse: true }}
               style={styles.caffeineAura}
             />
           </View>
         );
 
       case 'Giant':
+        // Screen LEDs blinking
         return (
           <MotiView
             from={{ scale: 1 }}
             animate={{ scale: 1.02 }}
-            transition={{ type: 'timing', duration: 4000, loop: true }}
+            transition={{ type: 'timing', duration: 3000, loop: true, repeatReverse: true }}
             style={styles.golmBody}
           >
             <View style={styles.golemScreen}>
               <MotiView
                 from={{ opacity: 0.5 }}
                 animate={{ opacity: 1 }}
-                transition={{ type: 'timing', duration: 600, loop: true }}
+                transition={{ type: 'timing', duration: 600, loop: true, repeatReverse: true }}
                 style={styles.golemLed}
               />
               <MotiView
                 from={{ opacity: 0.5 }}
                 animate={{ opacity: 1 }}
-                transition={{ type: 'timing', duration: 600, delay: 100, loop: true }}
+                transition={{ type: 'timing', duration: 600, delay: 300, loop: true, repeatReverse: true }}
                 style={styles.golemLed}
               />
             </View>
@@ -361,11 +364,12 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
         );
 
       case 'Steady Guardian':
+        // Dragon body bobbing
         return (
           <MotiView
             from={{ translateY: 0 }}
-            animate={{ translateY: -20 }}
-            transition={{ type: 'timing', duration: 1500, loop: true }}
+            animate={{ translateY: -12 }}
+            transition={{ type: 'timing', duration: 1500, loop: true, repeatReverse: true }}
             style={styles.dragonBody}
           >
             <Text style={styles.dragonZap}>⚡</Text>
@@ -375,11 +379,12 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
         );
 
       case 'Diversifier':
+        // Archie pulsing
         return (
           <MotiView
             from={{ scale: 1 }}
             animate={{ scale: 1.1 }}
-            transition={{ type: 'timing', duration: 800, loop: true }}
+            transition={{ type: 'timing', duration: 800, loop: true, repeatReverse: true }}
             style={styles.archieBody}
           >
             <Text style={styles.archieStar}>⭐</Text>
@@ -393,71 +398,35 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
     }
   };
 
+
   return (
-    <View
-  style={[
-    styles.container,
-    { transform: [{ scale }] },
-  ]}
->
-  <View
-    style={[
-      styles.creatureBodyContainer,
-      { paddingTop: 32 }, // increase top padding so creature has more space
-    ]}
-  >
-    {stockling.mood === 'nervous' && (
+    <View style={[styles.container, { transform: [{ scale }] }]}>
       <MotiView
-        from={{ opacity: 0, translateY: -20 }} // start slightly higher for a smoother fade-in
-        animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: 500 }}
-        style={styles.sickLabel}
+        from={{ translateY: 0 }}
+        animate={{ translateY: -8 }}
+        transition={{ type: 'timing', duration: 1500, loop: true, repeatReverse: true }}
+        style={[styles.creatureBodyContainer, { paddingTop: 32 }]}
       >
-        <Text style={styles.sickLabelText}>Feeling Sick...</Text>
-      </MotiView>
-    )}
-    {renderCreatureBody()}
-  </View>
+        {/* Sick label */}
+        {stockling.mood === 'nervous' && (
+          <MotiView
+            from={{ opacity: 0, translateY: -20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ type: 'timing', duration: 500 }}
+            style={styles.sickLabel}
+          >
+            <Text style={styles.sickLabelText}>Feeling Sick...</Text>
+          </MotiView>
+        )}
+        {/* Creature body */}
+        {renderCreatureBody()}
+      </MotiView>  
 
       <View style={styles.infoSection}>
         <Text style={styles.name}>{stockling.name}</Text>
         <Text style={styles.archetype}>{stockling.archetype}</Text>
       </View>
-
-      {/* <View style={styles.statsSection}>
-        
-        <View style={styles.statRow}>
-          <View style={[styles.statLabel, { justifyContent: 'space-between' }]}>
-            <Text style={styles.statLabelText}>❤️ Health</Text>
-            <Text style={[styles.statValue, { color: healthColor }]}>
-              {Math.round(stockling.health)}%
-            </Text>
-          </View>
-          <View style={styles.healthBarContainer}>
-            <MotiView
-              from={{ width: '0%' }}
-              animate={{ width: `${stockling.health}%` }}
-              style={[styles.healthBar, { backgroundColor: healthColor }]}
-            />
-          </View>
-        </View>
-
-        
-        <View style={styles.statRow}>
-          <View style={[styles.statLabel, { justifyContent: 'space-between' }]}>
-            <Text style={styles.statLabelText}>😊 Mood</Text>
-            <Text style={styles.statValue}>
-              {stockling.mood === 'happy'
-                ? '😄'
-                : stockling.mood === 'tired'
-                  ? '😴'
-                  : '😟'}
-            </Text>
-          </View>
-        </View>
-        
-
-      </View> */}
+  
     </View>
   );
 };
