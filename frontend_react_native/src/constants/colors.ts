@@ -21,6 +21,8 @@ export const colors = {
   slate800: '#1e293b',
   slate900: '#0f172a',
   slate950: '#020617',
+
+  yellow: '#FF8C00',
   
   // Blue
   blue400: '#60a5fa',

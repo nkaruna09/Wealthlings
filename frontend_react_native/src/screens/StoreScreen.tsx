@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet, TextStyle } from 'react-native';
+import { Heart, Pizza, Package } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import { useGameStore } from '@/store/gameStore';
 import { colors } from '@/constants/colors';
@@ -13,7 +14,7 @@ interface StoreItem {
   name: string;
   description: string;
   price: number;
-  emoji: string;
+  icon: ReactNode;
   type: 'healing' | 'xp' | 'bundle';
   quantity?: number;
 }
@@ -24,7 +25,7 @@ const STORE_ITEMS: StoreItem[] = [
     name: 'Healing Potion',
     description: 'Restore confidence to your Stocklings',
     price: 100,
-    emoji: '💚',
+    icon: <Heart color={colors.rose300}/>,
     type: 'healing',
   },
   {
@@ -32,7 +33,7 @@ const STORE_ITEMS: StoreItem[] = [
     name: 'Super Snack',
     description: 'Boost XP gain for your team',
     price: 150,
-    emoji: '🍕',
+    icon: <Pizza color={colors.yellow}/>,
     type: 'xp',
   },
   {
@@ -40,7 +41,7 @@ const STORE_ITEMS: StoreItem[] = [
     name: 'Mega Bundle',
     description: '3x Potions + 1x Snack (Best Value)',
     price: 350,
-    emoji: '📦',
+    icon: <Package color={colors.blue400}/>,
     type: 'bundle',
   },
 ];
@@ -257,7 +258,7 @@ export const StoreScreen: React.FC<Props> = ({ onNavigate }) => {
             >
               <View style={styles.itemContent}>
                 <View style={styles.itemIcon}>
-                  <Text style={styles.itemIconText}>{item.emoji}</Text>
+                  {item.icon}
                 </View>
 
                 <View style={styles.itemInfo}>
@@ -301,12 +302,12 @@ export const StoreScreen: React.FC<Props> = ({ onNavigate }) => {
           <Text style={styles.inventoryTitle}>Your Inventory</Text>
           <View style={styles.inventoryRow}>
             <View style={styles.inventoryCard}>
-              <Text style={styles.inventoryEmoji}>💚</Text>
+              <Heart color={colors.rose300}/>
               <Text style={styles.inventoryLabel}>Potions</Text>
               <Text style={styles.inventoryCount}>{inventory.potions}</Text>
             </View>
             <View style={styles.inventoryCard}>
-              <Text style={styles.inventoryEmoji}>🍕</Text>
+              <Pizza color={colors.yellow}/>
               <Text style={styles.inventoryLabel}>Snacks</Text>
               <Text style={styles.inventoryCount}>{inventory.snacks}</Text>
             </View>
