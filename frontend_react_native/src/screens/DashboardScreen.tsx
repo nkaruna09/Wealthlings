@@ -76,12 +76,16 @@ const styles = StyleSheet.create({
   } as TextStyle,
   howToPlayButton: {
     backgroundColor: colors.rose500,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 50,
+    paddingVertical: 20,
     borderRadius: 12,
     marginLeft: 12,
   },
-  howToPlayText: { color: colors.white, fontWeight: '700' },
+  howToPlayText: { 
+    color: colors.white, 
+    fontWeight: '700',
+    fontSize: 16,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: '#000000aa',
@@ -490,9 +494,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
           <Text style={styles.howToPlayText}>How to Play</Text>
         </TouchableOpacity>
 
-        <View style={styles.spacer} />
-
-        <View style={styles.spacer} />
+        <View style={styles.spacer} />\
 
       </ScrollView>
 
