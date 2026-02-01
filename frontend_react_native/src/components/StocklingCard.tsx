@@ -86,11 +86,6 @@ export const StocklingCard: React.FC<Props> = ({
               style={[styles.healthBar, { backgroundColor: healthColor }]}
             />
           </View>
-          <Text style={styles.healthDescription}>
-            {stockling.isAffectedByStorm
-              ? "Resting helps friends grow even stronger!"
-              : "Your friend is feeling great and learning lots!"}
-          </Text>
         </View>
 
         {/* Level + Heal Row */}
