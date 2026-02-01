@@ -295,14 +295,10 @@ const createStyles = () =>
     },
   });
 
-export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md' }) => {
   const styles = createStyles();
-  const scale = size === 'sm' ? 0.6 : size === 'lg' ? 1.5 : 1;
-  const isHealthLow = stockling.health < 30;
-  const healthColor = isHealthLow ? '#f87171' : colors.emerald400;
 
-  const renderCreatureBody = () => {
-    switch (stockling.archetype) {
+  export const renderCreatureBody = (archetype: string) => {
+    switch (archetype) {
       case 'Sprinter':
         // Animate legs back-and-forth
         return (
@@ -398,6 +394,10 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
     }
   };
 
+export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md' }) => {
+  const scale = size === 'sm' ? 0.6 : size === 'lg' ? 1.5 : 1;
+  const isHealthLow = stockling.health < 30;
+  const healthColor = isHealthLow ? '#f87171' : colors.emerald400;
 
   return (
     <View style={[styles.container, { transform: [{ scale }] }]}>
@@ -419,8 +419,8 @@ export const CreatureVisual: React.FC<CreatureProps> = ({ stockling, size = 'md'
           </MotiView>
         )}
         {/* Creature body */}
-        {renderCreatureBody()}
-      </MotiView>  
+        {renderCreatureBody(stockling.archetype)}
+      </MotiView>
 
       <View style={styles.infoSection}>
         <Text style={styles.name}>{stockling.name}</Text>

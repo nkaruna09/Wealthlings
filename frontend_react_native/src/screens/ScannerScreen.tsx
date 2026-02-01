@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const ScannerScreen: React.FC<Props> = ({ onNavigate }) => {
-  const { addStockling } = useGameStore();
+  const { addStockling, addCoins } = useGameStore();
 
   const handleScanComplete = (id: string, name: string, brand: string, sector: string, level: number, archetype: Archetype, isAffectedByStorm: boolean) => {
     const newStockling = {
@@ -25,6 +25,7 @@ export const ScannerScreen: React.FC<Props> = ({ onNavigate }) => {
       icon: '✨',
     };
     addStockling(newStockling);
+    addCoins(-1000);
     onNavigate('dashboard');
   };
 

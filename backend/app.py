@@ -252,7 +252,7 @@ def update_creatures_market():
             print(f"[Background Update Error] {creature_id}: {e}")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(update_creatures_market, 'interval', minutes=5)
+scheduler.add_job(update_creatures_market, 'interval', minutes=1)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 

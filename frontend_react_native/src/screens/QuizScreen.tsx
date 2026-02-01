@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet, TextStyle } from 'react-native';
+import { TrendingUp, AlertCircle, PieChart, DollarSign, Layers, Beaker, Coins } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import { colors } from '@/constants/colors';
+import { useGameStore } from '@/store/gameStore';
 
 interface Props {
   onNavigate?: (tab: string) => void;
@@ -17,7 +19,7 @@ interface QuizQuestion {
 interface Quiz {
   id: string;
   title: string;
-  emoji: string;
+  icon: React.ReactNode;
   color: string;
   bgColor: string;
   questions: QuizQuestion[];
@@ -27,9 +29,9 @@ const QUIZZES: Quiz[] = [
   {
     id: 'stocks-101',
     title: 'Stocks 101',
-    emoji: '📈',
-    color: '#3B82F6',
-    bgColor: '#E6F0FF',
+    icon: <TrendingUp size={40} color="#60A5FA" />,
+    color: '#60A5FA',
+    bgColor: '#1E3A8A',
     questions: [
       {
         question: 'What is a stock?',
@@ -91,9 +93,9 @@ const QUIZZES: Quiz[] = [
   {
     id: 'risk-management',
     title: 'Risk Management',
-    emoji: '⚠️',
-    color: '#FF6B6B',
-    bgColor: '#FFE6E6',
+    icon: <AlertCircle size={40} color="#F87171" />,
+    color: '#F87171',
+    bgColor: '#7F1D1D',
     questions: [
       {
         question: 'What is risk in investing?',
@@ -155,9 +157,9 @@ const QUIZZES: Quiz[] = [
   {
     id: 'budgeting',
     title: 'Smart Budgeting',
-    emoji: '📊',
-    color: '#10B981',
-    bgColor: '#E6F9F0',
+    icon: <PieChart size={40} color="#34D399" />,
+    color: '#34D399',
+    bgColor: '#064E3B',
     questions: [
       {
         question: 'What is a budget?',
@@ -219,9 +221,9 @@ const QUIZZES: Quiz[] = [
   {
     id: 'compound-interest',
     title: 'Compound Growth',
-    emoji: '💰',
-    color: '#FFD700',
-    bgColor: '#FFF9E6',
+    icon: <DollarSign size={40} color="#FBBF24" />,
+    color: '#FBBF24',
+    bgColor: '#78350F',
     questions: [
       {
         question: 'What is compound interest?',
@@ -283,9 +285,9 @@ const QUIZZES: Quiz[] = [
   {
     id: 'diversification',
     title: 'Portfolio Mix',
-    emoji: '🌈',
-    color: '#EC4899',
-    bgColor: '#FFE6F5',
+    icon: <Layers size={40} color="#F472B6" />,
+    color: '#F472B6',
+    bgColor: '#831843',
     questions: [
       {
         question: 'What does diversification do?',
@@ -357,7 +359,7 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 24,
     paddingTop: 24,
-    paddingBottom: 16,
+    paddingBottom: 24,
   },
   title: {
     fontSize: 28,
@@ -383,6 +385,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
+  },
+  quizButtonIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 60,
+    height: 60,
   },
   quizButtonEmoji: {
     fontSize: 40,
@@ -560,7 +568,69 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
   } as TextStyle,
+  explanationText: {
+    fontSize: 14,
+    color: colors.slate400,
+    marginTop: 30,
+    textAlign: 'center',
+  } as TextStyle,
+  confettiContainer: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+  },
+  confettiPiece: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
 });
+
+// Confetti Particle Component
+const ConfettiPiece: React.FC<{ delay: number }> = ({ delay }) => {
+  const randomX = Math.random() * 400 - 200;
+  const randomRotation = Math.random() * 360;
+  const colors_array = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181'];
+  const randomColor = colors_array[Math.floor(Math.random() * colors_array.length)];
+
+  return (
+    <MotiView
+      from={{
+        opacity: 1,
+        translateX: 0,
+        translateY: -20,
+        rotate: '0deg',
+      }}
+      animate={{
+        opacity: 0,
+        translateX: randomX,
+        translateY: 400,
+        rotate: `${randomRotation}deg`,
+      }}
+      transition={{
+        type: 'timing',
+        duration: 2500,
+        delay: delay,
+      }}
+      style={[styles.confettiPiece, { backgroundColor: randomColor }]}
+    />
+  );
+};
+
+// Confetti Animation Component
+const ConfettiAnimation: React.FC = () => {
+  const pieces = Array.from({ length: 30 }, (_, i) => i);
+
+  return (
+    <View style={styles.confettiContainer}>
+      {pieces.map((_, index) => (
+        <ConfettiPiece key={index} delay={Math.random() * 200} />
+      ))}
+    </View>
+  );
+};
 
 export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
   const [activeQuiz, setActiveQuiz] = useState<string | null>(null);
@@ -568,7 +638,11 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [showReward, setShowReward] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [answers, setAnswers] = useState<number[]>([]);
+  
+  const { addCoins, updateInventory, inventory } = useGameStore();
 
   const currentQuiz = QUIZZES.find((q) => q.id === activeQuiz);
   const questions = currentQuiz?.questions || [];
@@ -611,11 +685,11 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
 
   const getScoreMessage = () => {
     const percentage = (score / questions.length) * 100;
-    if (percentage === 100) return '🌟 Perfect! Financial Genius!';
-    if (percentage >= 80) return '🎉 Excellent Work!';
-    if (percentage >= 60) return '👍 Good Job!';
-    if (percentage >= 40) return '💪 Keep Learning!';
-    return '📚 Keep Practicing!';
+    if (percentage === 100) return 'Perfect! Financial Genius!';
+    if (percentage >= 80) return 'Excellent Work!';
+    if (percentage >= 60) return 'Good Job!';
+    if (percentage >= 40) return 'Keep Learning!';
+    return 'Keep Practicing!';
   };
 
   const getScoreColor = () => {
@@ -627,13 +701,25 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
     return colors.rose500;
   };
 
+  const handleClaimReward = () => {
+    if (score === 5) {
+      // Perfect score: grant 1 potion
+      updateInventory({ potions: (inventory.potions || 0) + 1 });
+    } else {
+      // Less than perfect: grant 5 * score coins
+      const coinReward = 5 * score;
+      addCoins(coinReward);
+    }
+    setShowReward(true);
+  };
+
   // Main Quiz Selection Screen
   if (!activeQuiz) {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <Text style={styles.title}>Financial Quizzes 📚</Text>
+            <Text style={styles.title}>Financial Quizzes</Text>
             <Text style={styles.subtitle}>Test your knowledge and earn coins!</Text>
           </View>
 
@@ -655,14 +741,14 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
                     },
                   ]}
                 >
-                  <Text style={styles.quizButtonEmoji}>{quiz.emoji}</Text>
+                  <View style={styles.quizButtonIconContainer}>{quiz.icon}</View>
                   <View style={styles.quizButtonContent}>
                     <Text style={[styles.quizButtonTitle, { color: quiz.color }]}>{quiz.title}</Text>
                     <Text style={[styles.quizButtonDescription, { color: quiz.color }]}>
                       5 questions • Complete for rewards!
                     </Text>
                   </View>
-                  <Text style={{ fontSize: 20 }}>→</Text>
+                  <Text style={{ color: quiz.color, ...styles.quizButtonTitle }}>→</Text>
                 </TouchableOpacity>
               </MotiView>
             ))}
@@ -673,7 +759,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
   }
 
   // Results Screen
-  if (showResults) {
+  if (showResults && !showReward) {
     const percentage = (score / questions.length) * 100;
     return (
       <SafeAreaView style={[styles.container, styles.resultsContainer]}>
@@ -695,16 +781,18 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
         </MotiView>
 
         <Text style={styles.resultMessage}>{getScoreMessage()}</Text>
-        <Text style={styles.resultDescription}>
+        {score > 0 &&<Text style={styles.resultDescription}>
           You answered {score} out of {questions.length} questions correctly. Keep learning to improve!
-        </Text>
+        </Text>}
 
-        <TouchableOpacity
+        {score > 0 && <TouchableOpacity
           style={styles.retakeButton}
-          onPress={() => handleStartQuiz(activeQuiz!)}
+          onPress={handleClaimReward}
         >
-          <Text style={styles.buttonText}>🔄 Retake Quiz</Text>
-        </TouchableOpacity>
+          <Text style={styles.buttonText}>
+            {score === 5 ? 'Claim Potion!' : `Claim ${5 * score} Coins!`}
+          </Text>
+        </TouchableOpacity>}
 
         <TouchableOpacity
           style={styles.homeButton}
@@ -713,8 +801,84 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
             onNavigate?.('dashboard');
           }}
         >
-          <Text style={styles.buttonText}>🏠 Back to Dashboard</Text>
+          <Text style={styles.buttonText}>Back to Dashboard</Text>
         </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  // Reward Screen
+  if (showReward) {
+    const isPerfect = score === 5;
+    const rewardAmount = isPerfect ? 1 : 5 * score;
+    
+    return (
+      <SafeAreaView style={[styles.container, styles.resultsContainer]}>
+        {showConfetti && <ConfettiAnimation />}
+        
+        <MotiView
+          from={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', damping: 10, mass: 1 }}
+          onDidAnimate={() => {
+            setTimeout(() => {
+              setShowConfetti(true);
+            }, 500);
+          }}
+        >
+          <Text style={[styles.scoreText, { fontSize: 80 }]}>
+            {isPerfect ? <Beaker/> : <Coins/>}
+          </Text>
+        </MotiView>
+
+        <MotiView
+          from={{ opacity: 0, translateY: 20 }}
+          animate={{ opacity: 1, translateY: 0 }}
+          transition={{ delay: 300 }}
+        >
+          <Text style={styles.resultMessage}>
+            {isPerfect ? 'Perfect Score!' : 'Reward Earned!'}
+          </Text>
+          <Text style={[styles.resultDescription, { marginBottom: 48 }]}>
+            {isPerfect
+              ? `You earned 1 Potion! Use it to heal your stocklings.`
+              : `You earned ${rewardAmount} coins! Keep playing to earn more!`}
+          </Text>
+        </MotiView>
+
+        <TouchableOpacity
+          style={styles.retakeButton}
+          onPress={() => {
+            setShowReward(false);
+            setShowResults(false);
+            setShowConfetti(false);
+            handleBackToQuizzes();
+            setActiveQuiz(null);
+          }}
+        >
+          <Text style={styles.buttonText}>Play Again</Text>
+        </TouchableOpacity>
+
+        {showConfetti && (
+          <MotiView
+            from={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ delay: 1200 }}
+          >
+            <TouchableOpacity
+              style={styles.homeButton}
+              onPress={() => {
+                setShowReward(false);
+                setShowResults(false);
+                setShowConfetti(false);
+                handleBackToQuizzes();
+                onNavigate?.('dashboard');
+              }}
+            >
+              <Text style={styles.buttonText}>Back to Dashboard</Text>
+            </TouchableOpacity>
+          </MotiView>
+        )}
       </SafeAreaView>
     );
   }
@@ -752,15 +916,18 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
               <TouchableOpacity
                 key={index}
                 onPress={() => handleSelectAnswer(index)}
+                disabled={selectedAnswer !== null}
                 style={[
                   styles.optionButton,
                   selectedAnswer === index && styles.optionButtonSelected,
-                  selectedAnswer === index &&
+                  selectedAnswer !== null &&
                     index === question.correctAnswer &&
                     styles.optionButtonCorrect,
                   selectedAnswer === index &&
                     index !== question.correctAnswer &&
                     styles.optionButtonWrong,
+                  selectedAnswer !== null && selectedAnswer !== index && question.correctAnswer !== index &&
+                    styles.submitButtonDisabled,
                 ]}
               >
                 <Text
@@ -774,7 +941,9 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
               </TouchableOpacity>
             ))}
           </View>
+          <Text style={styles.explanationText}>{selectedAnswer !== null && selectedAnswer !== questions[currentQuestion].correctAnswer && questions[currentQuestion].explanation}</Text>
         </View>
+
 
         <TouchableOpacity
           style={[styles.submitButton, !isAnswered && styles.submitButtonDisabled]}
@@ -782,7 +951,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate }) => {
           disabled={!isAnswered}
         >
           <Text style={styles.submitButtonText}>
-            {currentQuestion === questions.length - 1 ? '📊 See Results' : 'Next →'}
+            {currentQuestion === questions.length - 1 ? 'See Results' : 'Next →'}
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
