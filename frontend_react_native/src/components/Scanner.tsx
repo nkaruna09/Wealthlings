@@ -10,10 +10,11 @@ import {
 import { MotiView } from 'moti';
 import { Camera } from './Camera';
 import { colors } from '@/constants/colors';
+import { Archetype } from '@/types/stocklings';
 import * as ImageManipulator from 'expo-image-manipulator';
 
 interface Props {
-  onScanComplete: (brand: string) => void;
+  onScanComplete: (id: string, name: string, brand: string, sector: string, level: number, archetype: Archetype, isAffectedByStorm: boolean) => void;
   onBack: () => void;
 }
 
@@ -276,8 +277,26 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
             try {
                 const result = await uploadPhoto(photoUri);
                 if (result) {
+                    const id = result.creature.id;
+                    const name = result.creature.name;
                     const brand = result.creature.company_name;
+                    const ticker = result.creature.ticker;
+                    const sector = result.creature.sector;
+                    const level = result.creature.level;
+                    const personality = result.creature.personality;
+                    const isAffectedByStorm = result.market_storm.affected_sector;
+
                     setDetectedBrand(brand);
+
+                    onScanComplete(
+                        id,
+                        name,
+                        ticker,
+                        sector,
+                        level,
+                        personality as Archetype,
+                        isAffectedByStorm
+                    );
                 } else {
                     setScanError(true);
                 }
@@ -303,7 +322,7 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
 
     if (progress === 100 && detectedBrand) {
       setTimeout(() => {
-        onScanComplete(detectedBrand);
+        
       }, 1500);
     }
   }, [detectedBrand, progress, onScanComplete]);
@@ -350,7 +369,7 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
               <Text style={styles.instructionTitle}>Point at a Product</Text>
 
               <Text style={styles.instructionText}>
-                Scan product barcodes or point at brand logos to extract their market DNA
+                Point at brand logos to gain new friends
               </Text>
 
               {/* Scan Button */}

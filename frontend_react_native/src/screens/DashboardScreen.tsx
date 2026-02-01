@@ -276,6 +276,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
     coins,
     inventory,
     isStormActive,
+    addCoins,
     updateStockling,
     updateInventory,
     setStormActive,
@@ -288,6 +289,45 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
   const hasDiversificationShield = uniqueArchetypes.size >= 3;
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   
+  const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+
+    const onSell = async (id: string) => {
+        try {
+            if (!API_BASE_URL) {
+                console.error('API_BASE_URL is not set');
+                return;
+            }
+
+            const result = await fetch(`${API_BASE_URL}/api/creature/${id}/sell`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!result.ok) {
+                console.error('Sell request failed:', result.status);
+                return;
+            }
+
+            const data = await result.json();
+            if (data.success && typeof data.value === 'number') {
+                const sellPrice = data.value * 10;
+                // Ensure sellPrice is a valid number
+                if (!isNaN(sellPrice) && isFinite(sellPrice)) {
+                    addCoins(Math.floor(sellPrice));
+                    removeStockling(id);
+                } else {
+                    console.error('Invalid sell price calculated:', sellPrice);
+                }
+            } else {
+                console.error('Invalid API response:', data);
+            }
+        } catch (error) {
+            console.error('Error selling creature:', error);
+        }
+    };
+
   // Simulate storms
   useEffect(() => {
     const stormTimer = setInterval(() => {
@@ -335,13 +375,13 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
               <Text style={styles.headerIconText}>🛡️</Text>
             </View>
             <View>
-              <Text style={styles.headerTitle}>Stocklings</Text>
+              <Text style={styles.headerTitle}>Weathlings</Text>
               <Text style={styles.headerSubtitle}>● Market Live</Text>
             </View>
           </View>
           <View style={styles.coinsDisplay}>
             <Text>🪙</Text>
-            <Text style={styles.coinsText}>{coins.toLocaleString()}</Text>
+            <Text style={styles.coinsText}>{coins !== undefined && coins !== null ? coins.toString() : '0'}</Text>
           </View>
         </View>
 
@@ -399,16 +439,8 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
                   hasShield={hasDiversificationShield}
                   inventoryPotions={inventory.potions}
                   onHeal={handleHeal}
-                  onSell={() => console.log('Sell', item.id)} // make sure to pass onSell
+                  onSell={() => onSell(item.id)} // make sure to pass onSell
                 />
-                {item.isAffectedByStorm && (
-                  <TouchableOpacity
-                    onPress={() => removeStockling(item.id)}
-                    style={styles.deleteButton}
-                  >
-                    <Text style={styles.deleteButtonText}>🗑️</Text>
-                  </TouchableOpacity>
-                )}
               </MotiView>
             )}
           />
@@ -447,7 +479,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
               </Text>
             </View>
           </View>
-          {hasDiversificationShield && <Text style={styles.shieldBadge}>✨</Text>}
+          {hasDiversificationShield}
         </MotiView>
 
         {/* How to Play Button (below shield) */}
