@@ -483,7 +483,6 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
               </Text>
             </View>
           </View>
-          {hasDiversificationShield}
         </MotiView>
 
         {/* How to Play Button (below shield) */}
@@ -494,7 +493,7 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
           <Text style={styles.howToPlayText}>How to Play</Text>
         </TouchableOpacity>
 
-        <View style={styles.spacer} />\
+        <View style={styles.spacer} />
 
       </ScrollView>
 
