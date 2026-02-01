@@ -13,7 +13,7 @@ import * as MediaLibrary from 'expo-media-library';
 export function Camera({buttonPressed}: {buttonPressed: boolean}) {
   const [permission, requestPermission] = useCameraPermissions();
   const [mediaLibraryPermission, requestMediaLibraryPermission] = MediaLibrary.usePermissions();
-  const cameraRef = useRef(null);
+  const cameraRef = useRef<CameraView>(null);
 
   const takePictureAndSave = async () => {
     if (cameraRef.current) {

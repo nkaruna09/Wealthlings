@@ -3,7 +3,6 @@
     "babel": "^5.8.38",
     "expo": "^54.0.32",
     "expo-camera": "^17.0.10",
-    "expo-dev-client": "~6.0.20",
     "expo-image-picker": "^17.0.10",
     "expo-media-library": "^18.2.1",
     "lucide-react-native": "^0.563.0",
