@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { DashboardScreen } from '@/screens/DashboardScreen';
-import { StoreScreen } from '@/screens/StoreScreen';
+import { QuizScreen } from '@/screens/QuizScreen';
 import { ScannerScreen } from '@/screens/ScannerScreen';
 import { GuideScreen } from '@/screens/GuideScreen';
 import { BottomTabBar } from '@/components/BottomTabBar';
@@ -27,7 +27,7 @@ export default function App() {
     if (activeTab === 'dashboard') {
       return <DashboardScreen onNavigate={handleNavigate} />;
     } else if (activeTab === 'store') {
-      return <StoreScreen onNavigate={handleNavigate} />;
+      return <QuizScreen onNavigate={handleNavigate} />;
     } else if (activeTab === 'scanner') {
       return <ScannerScreen onNavigate={handleNavigate} />;
     } else if (activeTab === 'guide') {
