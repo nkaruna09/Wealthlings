@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, FlatList, Style
 import { MotiView } from 'moti';
 import { useGameStore } from '@/store/gameStore';
 import { StocklingCard } from '@/components/StocklingCard';
+import { CreatureVisual } from '@/components/CreatureVisual';
 import { colors } from '@/constants/colors';
 
 interface Props {
@@ -343,7 +344,27 @@ export const DashboardScreen: React.FC<Props> = ({ onNavigate }) => {
             </View>
           </View>
 
+          {/* Creatures Section */}
+          <FlatList
+            data={stocklings}
+            horizontal
+            scrollEnabled={stocklings.length > 1}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.flatListContent}
+            renderItem={({ item, index }) => (
+              <MotiView
+                from={{ opacity: 0, translateX: 20 }}
+                animate={{ opacity: 1, translateX: 0 }}
+                transition={{ delay: index * 100 }}
+              >
+                <CreatureVisual stockling={item} size="md" />
+              </MotiView>
+            )}
+          />
+
           {/* Stockling Cards */}
+          <Text style={[styles.teamTitle, { marginTop: 24, marginBottom: 16 }]}>Team Details</Text>
           <FlatList
             data={stocklings}
             horizontal
