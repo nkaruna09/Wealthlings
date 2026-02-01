@@ -86,9 +86,9 @@ src/
 
 ## Features
 
-- **Dashboard**: View your team of Stocklings
+- **Dashboard**: View your team of Weathlings
 - **Market Storms**: Random volatility events
-- **Scanner**: Scan products to capture new Stocklings
+- **Scanner**: Scan products to capture new Weathlings
 - **Store**: Purchase potions and snacks
 - **Lab**: View archetype data and team composition
 - **Diversification Shield**: Protect your team with varied archetypes

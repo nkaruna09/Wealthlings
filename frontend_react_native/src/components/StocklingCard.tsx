@@ -41,13 +41,6 @@ export const StocklingCard: React.FC<Props> = ({
         </MotiView>
       )}
 
-      {/* Shield Indicator */}
-      {hasShield && stockling.isAffectedByStorm && (
-        <View style={styles.shieldBadge}>
-          <Shield color={colors.emerald400} size={20} />
-        </View>
-      )}
-
       {/* Header: Name & Brand */}
       <View style={styles.header}>
         <View>

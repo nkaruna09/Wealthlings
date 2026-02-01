@@ -15,8 +15,8 @@ export interface Stockling {
 }
 
 export interface Inventory {
-  potions: number;
-  snacks: number;
+    potions: number;
+    snacks: number;
 }
 
 export const ARCHETYPE_METADATA: Record<Archetype, { description: string; traits: string[] }> = {

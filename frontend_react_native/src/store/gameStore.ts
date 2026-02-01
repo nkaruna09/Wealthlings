@@ -40,7 +40,7 @@ const INITIAL_STOCKLINGS: Stockling[] = [
     level: 12,
     health: 78,
     mood: 'happy',
-    isAffectedByStorm: false,
+    isAffectedByStorm: true,
     color: '#3B82F6',
     icon: '🎮',
   },
@@ -80,9 +80,12 @@ export const useGameStore = create<GameState>((set) => ({
       stocklings: state.stocklings.map((s) => (s.id === id ? { ...s, ...updates } : s)),
     })),
 
-  setCoins: (coins) => set({ coins }),
+  setCoins: (coins) => set({ coins: Math.max(0, coins || 0) }),
 
-  addCoins: (amount) => set((state) => ({ coins: state.coins + amount })),
+  addCoins: (amount) => set((state) => {
+    const validAmount = typeof amount === 'number' && !isNaN(amount) && isFinite(amount) ? amount : 0;
+    return { coins: Math.max(0, state.coins + validAmount) };
+  }),
 
   updateInventory: (inventory) =>
     set((state) => ({
