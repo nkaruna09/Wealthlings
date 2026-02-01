@@ -1,4 +1,3 @@
-// frontend_react_native/src/components/CreatureVisual.tsx
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { MotiView } from 'moti';

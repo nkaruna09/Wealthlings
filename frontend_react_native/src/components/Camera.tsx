@@ -10,31 +10,29 @@ import { DarkTheme } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 
-export function Camera({buttonPressed}: {buttonPressed: boolean}) {
+export function Camera({buttonPressed, setPhotoUri}: {buttonPressed: boolean, setPhotoUri: (uri: string | null) => void}) {
   const [permission, requestPermission] = useCameraPermissions();
   const [mediaLibraryPermission, requestMediaLibraryPermission] = MediaLibrary.usePermissions();
   const cameraRef = useRef<CameraView>(null);
 
-  const takePictureAndSave = async () => {
+    const takePictureAndUpload = async () => {
     if (cameraRef.current) {
       try {
-        // 1. Take the picture
         const photo = await cameraRef.current.takePictureAsync();
-        console.log('Photo URI (temporary):', photo.uri);
+        console.log('Photo URI:', photo.uri);
 
-        // 2. Save the image to the media library
-        await MediaLibrary.saveToLibraryAsync(photo.uri);
-        alert('Image successfully saved to Library!');
-        console.log('Image saved to library!');
+        // compress + send to backend
+        setPhotoUri(photo.uri);
       } catch (error) {
-        console.error('Failed to save image:', error);
+        console.error('Failed to upload photo:', error);
       }
     }
   };
 
+
   useEffect(() => {
     if (buttonPressed) {
-      takePictureAndSave();
+      takePictureAndUpload();
     }
   }, [buttonPressed]);
 
@@ -61,6 +59,7 @@ export function Camera({buttonPressed}: {buttonPressed: boolean}) {
       </View>
     );
   }
+
 
   return (
     <View style={styles.container}>

@@ -10,13 +10,12 @@ import {
 import { MotiView } from 'moti';
 import { Camera } from './Camera';
 import { colors } from '@/constants/colors';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 interface Props {
   onScanComplete: (brand: string) => void;
   onBack: () => void;
 }
-
-const BRAND_MOCKS = ['NIKE', 'APPLE', 'STARBUCKS', 'TESLA', 'DISNEY'];
 
 const styles = StyleSheet.create({
   container: {
@@ -210,30 +209,85 @@ const styles = StyleSheet.create({
   },
 });
 
+
+// Compress the photo
+const compressPhoto = async (uri: string) => {
+  const result = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: 800 } }], // resize to 800px wide
+    { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+  );
+  return result.uri;
+};
+
+// Upload the photo to backend
+const uploadPhoto = async (uri: string) => {
+  const compressedUri = await compressPhoto(uri);
+
+  const formData = new FormData();
+  formData.append('image', {
+    uri: compressedUri,
+    name: 'photo.jpg',
+    type: 'image/jpeg',
+  } as any);
+
+  formData.append('user_id', 'user_1');
+
+  const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+
+  try {
+    console.log("SENDING TO URL:", `${process.env.EXPO_PUBLIC_API_URL}/api/scan`);
+    const response = await fetch(`${API_BASE_URL}/api/scan`, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Creature Captured:', data.creature.personality);
+      alert('Photo uploaded successfully!');
+      return data;
+    } else {
+      alert(data.error || 'Scan failed');
+    }
+  } catch (error) {
+    console.error('Connection Error:', error);
+    alert('Cannot reach server. Check your IP and network.')
+  }
+};
+
+
 export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [detectedBrand, setDetectedBrand] = useState<string | null>(null);
   const [scanError, setScanError] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
 
-  const startScan = () => {
-    setIsScanning(true);
-    setProgress(0);
-    setScanError(false);
-    const delay = 1500 + Math.random() * 1500;
+  useEffect(() => {
+    const upload = async () => {
+        if (photoUri) {
+            setIsScanning(true);
+            setProgress(0);
+            setScanError(false);
 
-    setTimeout(() => {
-      // 70% chance of success, 30% chance of error
-      const isSuccess = Math.random() > 0.3;
-      
-      if (isSuccess) {
-        const randomBrand = BRAND_MOCKS[Math.floor(Math.random() * BRAND_MOCKS.length)];
-        setDetectedBrand(randomBrand);
-      } else {
-        setScanError(true);
-      }
-    }, delay);
-  };
+            try {
+                const result = await uploadPhoto(photoUri);
+                if (result) {
+                    const brand = result.creature.company_name;
+                    setDetectedBrand(brand);
+                } else {
+                    setScanError(true);
+                }
+            } catch (error) {
+                console.error('Error occurred while scanning:', error);
+            }
+        }
+    }
+    upload();
+  }, [photoUri]);
 
   useEffect(() => {
     if (detectedBrand && progress < 100) {
@@ -290,7 +344,7 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
               <View style={styles.innerCircle} />
 
               {/* Scanner Icon */}
-              <Camera buttonPressed={isScanning} />
+              <Camera buttonPressed={isScanning} setPhotoUri={setPhotoUri} />
 
               {/* Instructions */}
               <Text style={styles.instructionTitle}>Point at a Product</Text>
@@ -301,7 +355,7 @@ export const Scanner: React.FC<Props> = ({ onScanComplete, onBack }) => {
 
               {/* Scan Button */}
               <TouchableOpacity
-                onPress={startScan}
+                onPress={() => setIsScanning(true)}
                 disabled={isScanning}
                 style={[
                   styles.scanButton,

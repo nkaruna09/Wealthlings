@@ -55,8 +55,9 @@ def scan_brand():
     image_path = save_image(image_file)
 
     # Detect logo
-    brand_name = detect_logo(image_path)
-    if brand_name == "NO_LOGO":
+    result_data = detect_logo(image_path)
+    brand_name = result_data.get("logo") if isinstance(result_data, dict) else result_data
+    if not brand_name or brand_name == "NO_LOGO":
         return jsonify({"error": "No logo detected"}), 404
 
     # Get stock ticker
@@ -107,10 +108,10 @@ def scan_brand():
 
     return jsonify({
         'success': True,
-        'is_new': is_new,
+        'is_new': bool(is_new),
         'creature': creature,
         'market_storm': {
-            'active': is_storm,
+            'active': bool(is_storm),
             'severity': storm_severity,
             'affected_sector': stock_data['sector']
         },
@@ -257,4 +258,4 @@ atexit.register(lambda: scheduler.shutdown())
 
 # -------------------- Run Flask -------------------- #
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
